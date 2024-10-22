@@ -46,42 +46,23 @@ const Login: React.FC = () => {
 
     const navigateToDetails = async (userid: string, password: string) => {
         setLoginData({ userName: userid, password, access: '' });
-        if (title === 'Login') {
-            const isLoggedIn = await fetchLogin(loginData);
-            if (isLogin) {
-                navigate('/employDetails');
-            } else {
-                setErrorText("Incorrect UserID/Password!");
-            }
+    
+        const isLoggedIn = await fetchLogin(loginData);
+        if (isLoggedIn) {  
+            navigate('/employDetails');
         } else {
-            const isLoggedIn = await fetchLogin(loginData);
-            if (isLogin) {
-                setTitle('Login');
-                setPassword('');
-                setUserid('');
-                navigate('/');
-            } else {
-                setErrorText("User Already Exist!");
-            }
+            setErrorText("Incorrect UserID/Password!");
         }
     };
 
     const fetchLogin = async (loginData: LoginData) => {
         try {
-            let response: any;
-            if (title === 'Register' && repassword!=='') {
-                console.log("rig logic ");
-                response = await EmployService.register(loginData);
-            } else {
-                console.log("log logic ");
-                response = await EmployService.getLogin(loginData);
-            }
-
-            setIsLogin(response.data);
-            return isLogin;
+            console.log("log logic ");
+            const response = await EmployService.getLogin(loginData);
+            return response.data; 
         } catch (error) {
             console.error(error);
-            return isLogin;
+            return false; 
         }
     };
 
@@ -111,13 +92,13 @@ const Login: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 style={{ margin: '10px', padding: '10px', width: '200px' }}
             />
-            <input
+            {/* <input
                 type="password"
                 placeholder="Re-type Password"
                 value={repassword}
                 onChange={(e) => checkPassword(e.target.value)}
                 style={{ margin: '10px', padding: '10px', width: '200px' }}
-                hidden={title === 'Login'} />
+                hidden={title === 'Login'} /> */}
             <div>
                 <p className='errorMsg'>{errorText}</p>
             </div>
@@ -127,11 +108,11 @@ const Login: React.FC = () => {
                         <button onClick={() => handleLogin('loginbtn')}
                             style={{ padding: '10px 20px', marginTop: '20px' }}>Login</button>
                     </td>
-                    <td>
+                    {/* <td>
                         <button onClick={() => handleLogin('registerbtn')}
                             style={{ padding: '10px 20px', marginTop: '20px' }}
                             disabled={repassword !== password && title==='Register'}>Register</button>
-                    </td>
+                    </td> */}
                 </tr>
             </table>
 
